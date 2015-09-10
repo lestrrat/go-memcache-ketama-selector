@@ -17,6 +17,13 @@ type ServerSet struct {
 	ketama *ketama.Continuum
 }
 
+func makeHostPort(s string) string {
+	if !strings.Contains(s, ":") {
+		return s + ":11211"
+	}
+	return s
+}
+
 // Sets buckets to be used. Label must be either a valid TCP address or
 // a path to unix domain socket, in which case must contain a "/"
 func (ss *ServerSet) SetBuckets(buckets ...ketama.Bucket) error {
@@ -33,7 +40,7 @@ func (ss *ServerSet) SetBuckets(buckets ...ketama.Bucket) error {
 			if err != nil {
 				return err
 			}
-			addrs[b.Label] = tcpaddr
+			addrs[makeHostPort(b.Label)] = tcpaddr
 		}
 	}
 
